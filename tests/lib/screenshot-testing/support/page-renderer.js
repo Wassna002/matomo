@@ -327,14 +327,19 @@ PageRenderer.prototype._setupWebpageEvents = function () {
                     url,
                 });
 
+
+                if (VERBOSE) {
+                    this._logMessage('Requesting resource (#' + request.id + 'URL:' + url + ')');
+                }
+
                 return;
             }
-
-            request.continue();
         }
 
+        request.continue();
+
         if (VERBOSE) {
-            this._logMessage('Requesting resource (#' + requestData.id + 'URL:' + url + ')');
+            this._logMessage('Requesting resource (#' + request.id + 'URL:' + url + ')');
         }
     });
 

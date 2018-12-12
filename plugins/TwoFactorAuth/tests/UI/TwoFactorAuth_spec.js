@@ -118,7 +118,7 @@ describe("TwoFactorAuth", function () {
         await page.goto(userSettings);
         await captureUserSettings('usersettings_twofa_enabled');
     });
-
+return;
     it('should be possible to show recovery codes step1 authentication', async function () {
         await page.click('.showRecoveryCodesLink');
         await captureScreen('show_recovery_codes_step1');

@@ -21,55 +21,51 @@ describe("TwoFactorAuthUsersManager", function () {
     });
 
 
-    function selectModalButton(page, button)
-    {
-        page.click('.modal.open .modal-footer a:contains('+button+')');
-    }
-
-    function captureModal(done, screenshotName, test, selector) {
-        captureScreen(done, screenshotName, test, '.modal.open');
-    }
-
-    function captureScreen(done, screenshotName, test, selector) {
+    async function captureScreen(screenshotName, test, selector) {
         if (!selector) {
             selector = '#content,#notificationContainer';
         }
 
-        expect.screenshot(screenshotName).to.be.captureSelector(selector, test, done);
+        await test();
+
+        expect(await page.screenshotSelector(selector)).to.matchImage(screenshotName);
     }
 
-    function captureModal(done, screenshotName, test, selector) {
-        captureScreen(done, screenshotName, test, '.modal.open');
+    async function captureModal(screenshotName, test) {
+        await captureScreen(screenshotName, test, '.modal.open');
     }
 
-    it('shows users with 2fa and not 2fa', function (done) {
-        captureScreen(done, 'list', function (page) {
-            page.load(usersManager);
-            page.evaluate(function () {
+    it('shows users with 2fa and not 2fa', async function () {
+        await captureScreen('list', async function () {
+            await page.goto(usersManager);
+            await page.evaluate(function () {
                 $('td#last_seen').html(''); // fix random test failure
             });
         });
     });
 
-    it('menu should show 2fa tab', function (done) {
-        captureScreen(done, 'edit_with_2fa', function (page) {
-            page.setViewportSize(1250);
-            page.click('#manageUsersTable #row2 .edituser');
-            page.evaluate(function () {
+    it('menu should show 2fa tab', async function () {
+        await captureScreen('edit_with_2fa', async function () {
+            await page.webpage.setViewport({
+                width: 1250,
+                height: 768
+            });
+            await page.click('#manageUsersTable #row2 .edituser');
+            await page.evaluate(function () {
                 $('.userEditForm .menuUserTwoFa a').click();
             });
         });
     });
 
-    it('should ask for confirmation before resetting 2fa', function (done) {
-        captureModal(done, 'edit_with_2fa_reset_confirm', function (page) {
-            page.click('.userEditForm .twofa-reset .resetTwoFa .btn');
+    it('should ask for confirmation before resetting 2fa', async function () {
+        await captureModal('edit_with_2fa_reset_confirm', async function () {
+            await page.click('.userEditForm .twofa-reset .resetTwoFa .btn');
         });
     });
 
-    it('should be possible to confirm the reset', function (done) {
-        captureScreen(done, 'edit_with_2fa_reset_confirmed', function (page) {
-            page.click('.twofa-confirm-modal .modal-close:not(.modal-no)');
+    it('should be possible to confirm the reset', async function () {
+        await captureScreen('edit_with_2fa_reset_confirmed', async function () {
+            await page.click('.twofa-confirm-modal .modal-close:not(.modal-no)');
         });
     });
 

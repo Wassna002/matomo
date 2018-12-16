@@ -57,6 +57,7 @@ describe("TrackingFailures", function () {
         await page.evaluate(function () {
             $('.matomoTrackingFailures table tbody tr:nth-child(2) .icon-delete').click()
         });
+        await page.waitFor(250);
         expect(await page.screenshotSelector('.modal.open')).to.matchImage('manage_with_failures_delete_one_ask_confirmation');
     });
 
@@ -68,6 +69,7 @@ describe("TrackingFailures", function () {
 
     it('should show ask to confirm delete all', async function () {
         await page.click('.matomoTrackingFailures .deleteAllFailures');
+        await page.waitFor(250);
         expect(await page.screenshotSelector('.modal.open')).to.matchImage('manage_with_failures_delete_all_ask_confirmation');
     });
 

@@ -15,7 +15,7 @@ describe("TagManagerTeaser", function () {
 
     function setPluginsToLoad(plugins)
     {
-        testEnvironment.pluginsToLoad = plugins
+        testEnvironment.pluginsToLoad = plugins;
         testEnvironment.save();
     }
 
@@ -49,43 +49,45 @@ describe("TagManagerTeaser", function () {
 
     afterEach(reset);
 
-    function capturePage(done, screenshotName, test, selector)
+    async function capturePage(screenshotName, test, selector)
     {
+        await test();
+
         if (!selector) {
             selector = pageSelector;
         }
-        expect.screenshot(screenshotName).to.be.captureSelector(selector, test, done);
+        expect(await page.screenshotSelector(selector)).to.matchImage(screenshotName);
     }
 
-    it('should show teaser to super user', function (done) {
+    it('should show teaser to super user', async function () {
         unloadTagManager();
-        capturePage(done, 'superuser_page', function (page) {
+        await capturePage('superuser_page', async function () {
             unloadTagManager();
-            page.load(urlBase);
+            await page.goto(urlBase);
         });
     });
 
-    it('should be possible to activate plugin and redirect to tag manager', function (done) {
-        capturePage(done, 'super_user_activate_plugin', function (page) {
-            page.click('.activateTagManager .activateTagManagerPlugin');
+    it('should be possible to activate plugin and redirect to tag manager', async function () {
+        await capturePage('super_user_activate_plugin', async function () {
+            await page.click('.activateTagManager .activateTagManagerPlugin');
         }, '.pageWrap');
     });
 
-    it('should show teaser to admin', function (done) {
+    it('should show teaser to admin', async function () {
         unloadTagManager();
         setAdminUser();
-        capturePage(done, 'admin_page', function (page) {
+        await capturePage('admin_page', async function () {
             unloadTagManager();
             setAdminUser();
-            page.load(urlBase);
+            await page.goto(urlBase);
         });
     });
 
-    it('should be possible to disable page and redirect to home', function (done) {
-        capturePage(done, 'admin_page_disable', function (page) {
+    it('should be possible to disable page and redirect to home', async function () {
+        await capturePage('admin_page_disable', async function () {
             unloadTagManager();
             setAdminUser();
-            page.click('.activateTagManager .dontShowAgainBtn');
+            await page.click('.activateTagManager .dontShowAgainBtn');
         }, '.pageWrap');
     });
 

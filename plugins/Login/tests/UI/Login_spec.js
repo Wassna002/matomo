@@ -64,7 +64,9 @@ describe("Login", function () {
     it("should fail when incorrect credentials are supplied", async function() {
         await page.type('#login_form_login', 'superUserLogin');
         await page.type('#login_form_password', 'wrongpassword');
-        await page.click('#login_form_submit');
+        await page.evaluate(function(){
+            $('#login_form_submit').click();
+        });
         await page.waitForNetworkIdle();
 
         expect(await page.screenshot({ fullPage: true })).to.matchImage('login_fail');
@@ -91,7 +93,9 @@ describe("Login", function () {
     it("login with email and password should work", async function() {
         await page.type("#login_form_login", "hello@example.org");
         await page.type("#login_form_password", "superUserPass");
-        await page.click("#login_form_submit");
+        await page.evaluate(function(){
+            $('#login_form_submit').click();
+        });
 
         // check dashboard is shown
         await page.waitForSelector('#dashboard');
@@ -142,7 +146,9 @@ describe("Login", function () {
     it("should login successfully when new credentials used", async function() {
         await page.type("#login_form_login", "superUserLogin");
         await page.type("#login_form_password", "superUserPass2");
-        await page.click("#login_form_submit");
+        await page.evaluate(function(){
+            $('#login_form_submit').click();
+        });
 
         // check dashboard is shown
         await page.waitForSelector('#dashboard');

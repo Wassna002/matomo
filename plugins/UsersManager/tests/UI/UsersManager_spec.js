@@ -102,7 +102,7 @@ describe("UsersManager", function () {
         await page.click('.bulk-actions.btn');
         await (await page.jQuery('#user-list-bulk-actions>li:first')).hover();
         await (await page.jQuery('#bulk-set-access a:contains(Admin)')).click();
-        await page.waitFor(250); // wait for animation
+        await page.waitFor(350); // wait for animation
 
         expect(await page.screenshotSelector('.change-user-role-confirm-modal')).to.matchImage('bulk_set_access_confirm');
     });
@@ -187,7 +187,9 @@ describe("UsersManager", function () {
         });
 
         await page.click('.userPermissionsEdit th.select-cell label');
+        await page.waitFor(250);
         await page.click('.userPermissionsEdit tr.select-all-row a');
+        await page.waitFor(250);
 
         expect(await page.screenshotSelector('.usersManager')).to.matchImage('permissions_all_rows_in_search');
     });
@@ -287,7 +289,9 @@ describe("UsersManager", function () {
         });
 
         await page.click('.userPermissionsEdit th.select-cell label');
+        await page.waitFor(250);
         await page.click('.userPermissionsEdit tr.select-all-row a');
+        await page.waitFor(250);
 
         await page.click('.userPermissionsEdit .bulk-actions > .dropdown-trigger.btn');
         await (await page.jQuery('.userPermissionsEdit a:contains(Remove Permissions)')).click();
@@ -331,6 +335,7 @@ describe("UsersManager", function () {
 
     it('should show the edit user form when the edit icon in a row is clicked', async function () {
         await (await page.jQuery('button.edituser:eq(1)')).click();
+        await page.waitFor(250);
         await page.waitForNetworkIdle();
 
         expect(await page.screenshotSelector('.usersManager')).to.matchImage('edit_user_form');
@@ -426,7 +431,8 @@ describe("UsersManager", function () {
             await page.evaluate(function () { // show new user
                 $('#user-text-filter').val('0_login3conchords@example.com').change();
             });
-            await page.waitFor(500);
+            await page.waitForNetworkIdle();
+            await page.waitFor(250);
 
             expect(await page.screenshotSelector('.usersManager')).to.matchImage('admin_add_user_by_email');
         });
@@ -440,6 +446,8 @@ describe("UsersManager", function () {
             await page.evaluate(function () { // show new user
                 $('#user-text-filter').val('10_login8').change();
             });
+            await page.waitForNetworkIdle();
+            await page.waitFor(250);
 
             expect(await page.screenshotSelector('.usersManager')).to.matchImage('admin_add_user_by_login');
         });
@@ -453,6 +461,8 @@ describe("UsersManager", function () {
             await page.evaluate(function () { // show no user added
                 $('#user-text-filter').val('sldkjfsdlkfjsdkl').change();
             });
+            await page.waitForNetworkIdle();
+            await page.waitFor(250);
 
             expect(await page.screenshotSelector('.usersManager')).to.matchImage('admin_add_user_not_exists');
         });
